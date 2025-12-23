@@ -6,14 +6,14 @@
     <title>nvinhtool.click</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        body, html { background: #0b1120; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { background: #0b1120; height: 100%; width: 100%; overflow: hidden; font-family: sans-serif; }
 
         /* Loading Screen */
         #loading { position: fixed; inset: 0; background: #0b1120; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
         #loading img { width: 120px; }
 
-        /* Falling Items */
-        #snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
+        /* Tuyết và chữ rơi */
+        #snow-container { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
         .falling-item { position: absolute; top: -50px; white-space: nowrap; animation: fall linear forwards; }
         @keyframes fall { 
             0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
@@ -21,73 +21,90 @@
             100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
         }
 
-        /* Hộp quà siêu đẹp */
-        #gift-box {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            width: 80px; cursor: pointer; z-index: 2000;
-            transition: transform 0.3s;
-            display: none;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); /* Hiệu ứng lấp lánh vàng */
+        /* KHU VỰC HỘP QUÀ */
+        .gift-container {
+            position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; cursor: pointer; display: none;
         }
-        #gift-box:hover { transform: translateX(-50%) scale(1.1); }
-        @keyframes gift-fall {
-            to { top: 45%; transform: translateX(-50%) rotate(360deg); }
-        }
-        .gift-bounce { animation: gift-fall 3s ease-out forwards, bounce 2s infinite 3s; }
-        @keyframes bounce { 0%, 100% { margin-top: 0; } 50% { margin-top: -20px; } }
+        .gift-fall-animation { animation: gift-drop 3s ease-out forwards; }
 
-        /* Lá thư/Modal */
-        #letter-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            display: none; align-items: center; justify-content: center; z-index: 3000;
-            backdrop-filter: blur(5px);
+        @keyframes gift-drop {
+            to { top: 60%; }
         }
-        .letter-content {
-            background: #fff; padding: 30px; width: 85%; max-width: 400px;
-            border-radius: 15px; position: relative; text-align: center;
-            box-shadow: 0 0 30px rgba(255,255,255,0.3);
-            transform: scale(0); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        /* Hộp quà bằng CSS */
+        .gift-box {
+            position: relative; width: 120px; height: 100px; background: #d42424;
+            border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
-        .letter-content h2 { color: #d42424; margin-bottom: 15px; }
-        .letter-content p { color: #333; line-height: 1.6; margin-bottom: 20px; }
-        .close-btn { 
-            background: #d42424; color: white; padding: 10px 25px; 
-            border: none; border-radius: 20px; cursor: pointer; font-weight: bold;
+        /* Nắp hộp */
+        .gift-box::before {
+            content: ''; position: absolute; width: 130px; height: 30px;
+            background: #e74c3c; top: -30px; left: -5px; z-index: 2;
+            transition: transform 0.8s ease; border-radius: 3px;
         }
+        /* Ruy băng */
+        .gift-box::after {
+            content: ''; position: absolute; width: 20px; height: 100%;
+            background: #ffdb11; left: 50%; transform: translateX(-50%); z-index: 1;
+        }
+
+        /* Mở nắp khi click */
+        .gift-container.open .gift-box::before { transform: translateY(-100px) rotate(-15deg); opacity: 0; }
+
+        /* LÁ THƯ BÊN TRONG */
+        .letter {
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            width: 100px; height: 80px; background: white; z-index: 0;
+            transition: all 0.8s ease; padding: 10px; border-radius: 5px;
+            overflow: hidden; opacity: 0; box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .gift-container.open .letter {
+            bottom: 50px; width: 280px; height: 350px; opacity: 1; transform: translateX(-50%) translateY(-100%);
+            z-index: 10; padding: 20px;
+        }
+
+        .letter-content { font-size: 14px; color: #333; line-height: 1.5; text-align: center; display: none; }
+        .gift-container.open .letter-content { display: block; }
+        .letter-content h2 { color: #d42424; margin-bottom: 10px; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div id="loading">
-        <img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycnJtdmRqY2J5NWZwamU3NXBoNWtpY2xmcnowc2thdHRodGtpYmVzcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/0dAMYxFahMEvxW0ese/giphy.gif" alt="Loading">
-    </div>
-
+    <div id="loading"><img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycnJtdmRqY2J5NWZwamU3NXBoNWtpY2xmcnowc2thdHRodGtpYmVzcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/0dAMYxFahMEvxW0ese/giphy.gif"></div>
     <div id="snow-container"></div>
 
-    <img src="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyeG9pYmJ3ZXN4bmR6eGNuMnd4bmR6eGNuMnd4bmR6eGNuMnd4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/kY86PHuXU3i38uK137/giphy.gif" id="gift-box" alt="Gift">
-
-    <div id="letter-modal">
-        <div class="letter-content" id="letter-box">
-            <h2>Gửi Bạn ❤️</h2>
-            <p id="letter-text">Chúc bạn một mùa Giáng sinh an lành, ấm áp và tràn đầy niềm vui! Hy vọng món quà nhỏ này sẽ làm bạn mỉm cười.</p>
-            <button class="close-btn" onclick="closeLetter()">Đóng thư</button>
+    <div id="gift-wrapper" class="gift-container" onclick="openGift()">
+        <div class="letter">
+            <div class="letter-content">
+                <h2>Gửi nvinhtool ❤️</h2>
+                <p>Đây là lá thư nằm bên trong hộp quà của bạn!</p>
+                <br>
+                <p>Chúc bạn một ngày thật tuyệt vời, may mắn và luôn hạnh phúc.</p>
+                <p>Cảm ơn bạn đã ghé thăm website!</p>
+                <br>
+                <p style="font-size: 25px;">🎁🎄✨</p>
+                <p style="margin-top: 20px; color: #999; font-size: 11px;">(Chạm để đóng nắp)</p>
+            </div>
         </div>
+        <div class="gift-box"></div>
     </div>
 
     <script>
-        // Tắt Loading
+        // Xử lý loading
         window.addEventListener('load', () => {
             setTimeout(() => {
-                const loader = document.getElementById('loading');
-                loader.style.opacity = '0';
-                setTimeout(() => { loader.style.display = 'none'; }, 800);
-                
-                // Sau 5 giây từ khi load xong, cho hộp quà rơi
-                setTimeout(showGift, 5000);
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => { 
+                    document.getElementById('loading').style.display = 'none'; 
+                    // 5 giây sau khi load xong thì hộp quà rơi
+                    setTimeout(dropGift, 5000);
+                }, 800);
             }, 1500);
         });
 
-        // Tạo tuyết, cây thông và chữ rơi
+        // Tuyết và chữ rơi
         function createFallingObject() {
             const container = document.getElementById('snow-container');
             const item = document.createElement('div');
@@ -95,19 +112,19 @@
             const rand = Math.random();
             let maxOpacity = 0.5;
 
-            if (rand < 0.5) { // 50% rơi chữ
+            if (rand < 0.5) { 
                 item.innerText = 'hot phòng ~';
                 item.style.color = 'rgba(255, 255, 255, 0.4)'; 
                 item.style.fontSize = (Math.random() * 5 + 12) + 'px';
                 maxOpacity = 0.4;
-            } else if (rand < 0.7) { // 20% rơi cây thông
+            } else if (rand < 0.7) { 
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybXZqM3FmbmU4NThpdWFldmoyNzg2ZDdqaXY4MHF4azRxYzI1bzFlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GkOGd5X6gdP1tfF4zx/giphy.gif';
                 img.style.width = (Math.random() * 10 + 15) + 'px';
                 img.style.filter = 'opacity(0.6)'; 
                 item.appendChild(img);
                 maxOpacity = 0.6;
-            } else { // 30% rơi tuyết
+            } else { 
                 item.innerHTML = '❄';
                 item.style.color = 'rgba(255, 255, 255, 0.6)';
                 item.style.fontSize = (Math.random() * 10 + 10) + 'px';
@@ -123,34 +140,20 @@
         }
         setInterval(createFallingObject, 150);
 
-        // Hộp quà
-        function showGift() {
-            const gift = document.getElementById('gift-box');
+        // Hiệu ứng hộp quà
+        function dropGift() {
+            const gift = document.getElementById('gift-wrapper');
             gift.style.display = 'block';
-            gift.classList.add('gift-bounce');
-            gift.onclick = openLetter;
+            gift.classList.add('gift-fall-animation');
         }
 
-        function openLetter() {
-            const modal = document.getElementById('letter-modal');
-            const content = document.getElementById('letter-box');
-            modal.style.display = 'flex';
-            setTimeout(() => { content.style.transform = 'scale(1)'; }, 10);
-            
-            // Ẩn hộp quà sau khi mở
-            document.getElementById('gift-box').style.display = 'none';
+        function openGift() {
+            const gift = document.getElementById('gift-wrapper');
+            gift.classList.toggle('open');
         }
 
-        function closeLetter() {
-            const modal = document.getElementById('letter-modal');
-            const content = document.getElementById('letter-box');
-            content.style.transform = 'scale(0)';
-            setTimeout(() => { modal.style.display = 'none'; }, 500);
-        }
-
-        // Bảo mật
+        // Chặn chuột phải
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = e => { if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 73))) return false; };
     </script>
 </body>
 </html>
