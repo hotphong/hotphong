@@ -37,7 +37,7 @@
             width: 120px; 
         }
 
-        /* Container Tuyết và Cây thông rơi */
+        /* Container vật thể rơi */
         #snow-container { 
             position: fixed; 
             top: 0; 
@@ -48,16 +48,19 @@
             z-index: 1000; 
         }
 
-        .snowflake { 
+        .falling-item { 
             position: absolute; 
             top: -50px; 
+            white-space: nowrap;
             animation: fall linear forwards; 
         }
 
         /* Hiệu ứng rơi */
         @keyframes fall { 
-            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; } 
-            100% { transform: translateY(110vh) rotate(20deg); opacity: 0; } 
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
         }
     </style>
 </head>
@@ -81,40 +84,46 @@
             }, 1500);
         });
 
-        // Hàm tạo vật thể rơi (tuyết hoặc cây thông)
+        // Hàm tạo vật thể rơi
         function createFallingObject() {
             const container = document.getElementById('snow-container');
-            const flake = document.createElement('div');
-            flake.className = 'snowflake';
+            const item = document.createElement('div');
+            item.className = 'falling-item';
             
-            // Tỷ lệ 30% ra cây thông, 70% ra bông tuyết
-            const isTree = Math.random() < 0.3;
+            // Random loại: 0 = Tuyết, 1 = Cây thông, 2 = Chữ "hot phòng ~"
+            const rand = Math.random();
 
-            if (isTree) {
+            if (rand < 0.2) { 
+                // Tỉ lệ 20% rơi chữ "hot phòng ~"
+                item.innerText = 'hot phòng ~';
+                item.style.color = '#ffffff';
+                item.style.fontSize = (Math.random() * 5 + 12) + 'px';
+                item.style.fontWeight = 'bold';
+            } else if (rand < 0.45) { 
+                // Tỉ lệ 25% rơi cây thông
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybXZqM3FmbmU4NThpdWFldmoyNzg2ZDdqaXY4MHF4azRxYzI1bzFlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GkOGd5X6gdP1tfF4zx/giphy.gif';
-                img.style.width = (Math.random() * 15 + 15) + 'px'; // Kích thước cây thông nhỏ (15-30px)
-                flake.appendChild(img);
-            } else {
-                flake.innerHTML = '❄';
-                flake.style.color = '#fff';
-                flake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                img.style.width = (Math.random() * 15 + 15) + 'px';
+                item.appendChild(img);
+            } else { 
+                // Tỉ lệ 55% rơi bông tuyết
+                item.innerHTML = '❄';
+                item.style.color = '#fff';
+                item.style.fontSize = (Math.random() * 10 + 10) + 'px';
             }
             
-            flake.style.left = Math.random() * 100 + 'vw';
-            flake.style.opacity = Math.random() * 0.7 + 0.3;
-            
+            item.style.left = Math.random() * 90 + 'vw'; // Giới hạn 90vw để không bị tràn lề phải
             const duration = Math.random() * 4 + 6;
-            flake.style.animationDuration = duration + 's';
+            item.style.animationDuration = duration + 's';
 
-            container.appendChild(flake);
+            container.appendChild(item);
 
             setTimeout(() => {
-                flake.remove();
+                item.remove();
             }, duration * 1000);
         }
 
-        // Tạo rơi liên tục
+        // Tạo rơi liên tục (250ms tạo 1 cái)
         setInterval(createFallingObject, 250);
 
         // Bảo mật cơ bản
