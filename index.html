@@ -3,22 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-    <title>nvinhtool.click - Optimized</title>
+    <title>nvinhtool.click - Noel Gift</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body, html { background: #0b1120; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 
-        /* Màn hình chờ */
         #loading { position: fixed; inset: 0; background: #0b1120; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
         #loading img { width: 120px; }
 
-        /* Container rơi */
         #snow-container { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
 
         .falling-item { 
             position: absolute; top: -50px; white-space: nowrap; 
             animation: fall linear forwards; 
-            /* Transition màu để tạo hiệu ứng đổi màu mượt */
             transition: color 3s ease, text-shadow 3s ease; 
             color: rgba(255, 255, 255, 0.4);
         }
@@ -29,14 +26,12 @@
             100% { transform: translateY(110vh) rotate(20deg); opacity: 0; } 
         }
 
-        /* Chế độ hồng - Sẽ được kích hoạt sau 2 giây delay */
         .pink-activated .falling-text {
             color: #FFB6C1 !important; 
             text-shadow: 0 0 10px #FFB6C1, 0 0 20px #fff;
             font-weight: bold;
         }
 
-        /* Hộp quà */
         .gift-container {
             position: fixed; top: -300px; left: 50%; transform: translateX(-50%);
             z-index: 2000; cursor: pointer; 
@@ -53,23 +48,31 @@
         .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; transition: 0.5s; }
         .gift-box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
 
-        /* Lá thư nhỏ gọn hơn */
+        /* Lá thư nhỏ gọn & Có thanh cuộn nếu nội dung dài */
         .letter {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 60px; height: 40px; background: #fff; border-radius: 5px;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 2;
+            overflow: hidden;
         }
         .open .letter {
-            width: 260px; height: 320px; bottom: 60px; opacity: 1; 
+            width: 280px; height: 380px; bottom: 60px; opacity: 1; 
             transform: translateX(-50%) translateY(-10px);
-            padding: 20px; box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            padding: 15px; box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            overflow-y: auto; /* Cho phép cuộn để đọc hết lời chúc */
         }
         .open .gift-box-body::before { transform: translateY(-80px) rotate(-20deg); opacity: 0; }
 
-        .letter-text { display: none; text-align: center; color: #333; font-size: 14px; }
+        .letter-text { display: none; text-align: left; color: #333; font-size: 13px; line-height: 1.6; }
         .open .letter-text { display: block; }
+        .letter-header { text-align: center; color: #d42424; font-weight: bold; font-size: 18px; margin-bottom: 15px; }
+        .wish-item { margin-bottom: 8px; border-bottom: 1px dotted #eee; padding-bottom: 4px; }
+        .name { font-weight: bold; color: #c0392b; }
 
-        /* Hộp quà biến mất */
+        /* Thanh cuộn đẹp cho thư */
+        .letter::-webkit-scrollbar { width: 4px; }
+        .letter::-webkit-scrollbar-thumb { background: #d42424; border-radius: 10px; }
+
         .box-disappear { 
             animation: rotateAndAway 1.8s forwards ease-in !important; 
             pointer-events: none;
@@ -88,11 +91,29 @@
     <div id="gift-wrapper" class="gift-container">
         <div class="letter" id="letter-close" onclick="toggleGift(event)">
             <div class="letter-text">
-                <h3 style="color: #d42424; margin-bottom: 10px;">Thân Gửi ❤️</h3>
-                <p>Chúc bạn một ngày</p>
-                <p>thật hạnh phúc!</p>
-                <div style="font-size: 40px; margin: 15px 0;">🎁✨</div>
-                <p style="font-size: 11px; font-style: italic; color: #888;">(Bấm để đóng & nhận bất ngờ)</p>
+                <div class="letter-header">Hot Phòng ~</div>
+                
+                <div class="wish-item"><span class="name">blewiz.12:</span> Noel vui vẻ nha, chúc bạn luôn tỏa sáng và hạnh phúc bên người thân! ✨</div>
+                <div class="wish-item"><span class="name">emm bé ~:</span> Noel vui vẻ nha, chúc bé luôn đáng yêu, được cưng chiều và cười thật nhiều nhé! 🧸</div>
+                <div class="wish-item"><span class="name">thi:</span> Noel vui vẻ nha, chúc cậu một mùa đông thật ấm áp, vạn sự như ý và luôn xinh đẹp! ❄️</div>
+                <div class="wish-item"><span class="name">baolamm ?:</span> Noel vui vẻ nha, chúc bạn luôn giữ được năng lượng tích cực và gặp thật nhiều may mắn! 🌟</div>
+                <div class="wish-item"><span class="name">ahh bo ~:</span> Noel vui vẻ nha, chúc ông luôn vui tươi, đạt được mọi dự định và thành công rực rỡ! 🔥</div>
+                <div class="wish-item"><span class="name">lphuoc hau` 04:</span> Noel vui vẻ nha, chúc bạn một mùa Giáng sinh ngập tràn niềm vui và sự ấm áp! 🎄</div>
+                <div class="wish-item"><span class="name">die.4u~06:</span> Noel vui vẻ nha, chúc em luôn ngọt ngào, bình yên và nhận được thật nhiều quà! 🎁</div>
+                <div class="wish-item"><span class="name">kieutien:</span> Noel vui vẻ nha, chúc chị lúc nào cũng rạng rỡ, hạnh phúc và mọi điều tốt lành sẽ đến! 💖</div>
+                <div class="wish-item"><span class="name">vợ nhi😋:</span> Noel vui vẻ nha, chúc vợ luôn hạnh phúc nhất thế gian, mãi yêu đời và bên anh nhé! 🍬</div>
+                <div class="wish-item"><span class="name">luve.hurts_:</span> Noel vui vẻ nha, chúc bạn tìm thấy thật nhiều niềm vui mới, nỗi buồn qua đi hạnh phúc sẽ tới! 🌈</div>
+                <div class="wish-item"><span class="name">th van ~:</span> Noel vui vẻ nha, chúc cậu luôn bình yên, may mắn và có một mùa Noel thật đáng nhớ! 🎈</div>
+                <div class="wish-item"><span class="name">ph thuy ~:</span> Noel vui vẻ nha, chúc em luôn tràn đầy sức sống, thành công và luôn nở nụ cười trên môi! 🌸</div>
+                <div class="wish-item"><span class="name">Tuấn anhh~:</span> Noel vui vẻ nha, chúc ông luôn mạnh mẽ, kiên định và có một đêm Noel thật cháy nhé! ⚡</div>
+                <div class="wish-item"><span class="name">tín mìgói:</span> Noel vui vẻ nha, chúc bạn luôn vui vẻ, công việc thuận lợi và bớt thức khuya ăn mì nha! 🍜</div>
+                <div class="wish-item"><span class="name">buon !:</span> Noel vui vẻ nha, chúc bạn bỏ lại mọi muộn phiền, đón nhận thật nhiều yêu thương và hơi ấm! 🕯️</div>
+                <div class="wish-item"><span class="name">nổ hũ nạpff:</span> Noel vui vẻ nha, chúc bạn nạp đâu trúng đó, may mắn đầy mình và Noel thật hên! 🎰</div>
+                <div class="wish-item"><span class="name">emm ngọcc ~:</span> Noel vui vẻ nha, chúc em luôn là viên ngọc sáng, được che chở và thật hạnh phúc! 💎</div>
+                <div class="wish-item"><span class="name">hiru No1 09:</span> Noel vui vẻ nha, chúc bạn luôn giữ vững phong độ, dẫn đầu mọi cuộc chơi và thật hạnh phúc! 🏆</div>
+                <div class="wish-item"><span class="name">em ni (cqd):</span> Noel vui vẻ nha, chúc em luôn xinh xắn, ngoan ngoãn và có một mùa Giáng sinh tuyệt vời nhất! 🎀</div>
+
+                <p style="font-size: 11px; text-align: center; font-style: italic; color: #888; margin-top: 10px;">(Bấm để đóng & nhận bất ngờ từ Hot Phòng)</p>
             </div>
         </div>
         <div class="gift-box-body" id="target-box" onclick="toggleGift(event)"></div>
@@ -101,7 +122,7 @@
     <script>
         let isOpened = false;
         let spawnInterval = null;
-        let currentRate = 120; // Tăng số lượng ngay khi vào web (trước là 250)
+        let currentRate = 120; // Mật độ dày ngay từ đầu
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -113,7 +134,6 @@
                     }, 5000);
                 }, 800);
             }, 1000);
-            
             startFalling();
         });
 
@@ -126,19 +146,13 @@
                 isOpened = true;
             } else {
                 wrapper.classList.remove('open');
-                
                 setTimeout(() => {
-                    // 1. Hộp quà biến mất
                     wrapper.classList.add('box-disappear');
-                    
-                    // 2. Tăng số lượng rơi lên mức tối đa ngay lập tức
                     updateSpawnRate(60); 
-
-                    // 3. Đợi 2 giây sau khi hộp quà biến mất mới đổi sang màu hồng
+                    // Đợi 2 giây sau khi hộp quà rơi mới đổi màu hồng
                     setTimeout(() => {
                         document.body.classList.add('pink-activated');
                     }, 2000); 
-
                 }, 600);
             }
         }
@@ -147,34 +161,30 @@
             const container = document.getElementById('snow-container');
             const item = document.createElement('div');
             item.className = 'falling-item';
-            
             const rand = Math.random();
             let maxOpacity = 0.5;
             const isPink = document.body.classList.contains('pink-activated');
 
-            if (rand < 0.4) { 
+            if (rand < 0.45) { 
                 item.innerText = 'hot phòng ~';
                 item.classList.add('falling-text');
                 item.style.fontSize = (Math.random() * 4 + 11) + 'px';
                 maxOpacity = 0.8;
-            } else if (rand < 0.75) { 
+            } else if (rand < 0.8) { 
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/GkOGd5X6gdP1tfF4zx/giphy.gif';
-                img.style.width = isPink ? '20px' : '14px'; 
+                img.style.width = isPink ? '20px' : '15px'; 
                 item.appendChild(img);
-                maxOpacity = 0.9;
+                maxOpacity = 1;
             } else { 
                 item.innerHTML = '❄';
-                item.style.color = isPink ? 'rgba(255, 182, 193, 0.7)' : 'rgba(255, 255, 255, 0.5)';
-                maxOpacity = 0.6;
+                item.style.color = isPink ? 'rgba(255, 182, 193, 0.7)' : 'rgba(255, 255, 255, 0.6)';
             }
             
             item.style.setProperty('--max-opacity', maxOpacity);
             item.style.left = Math.random() * 100 + 'vw';
-            
             const duration = isPink ? (Math.random() * 3 + 3) : (Math.random() * 5 + 6);
             item.style.animationDuration = duration + 's';
-            
             container.appendChild(item);
             setTimeout(() => { item.remove(); }, duration * 1000);
         }
