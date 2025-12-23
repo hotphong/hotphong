@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-    <title>nvinhtool.click - Noel Gift</title>
+    <title>Noel Gift - Hot Phòng</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body, html { background: #0b1120; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
@@ -48,33 +48,37 @@
         .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; transition: 0.5s; }
         .gift-box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
 
+        /* Lá thư căn giữa dễ đọc */
         .letter {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 60px; height: 40px; background: #fff; border-radius: 5px;
+            width: 50px; height: 30px; background: #fff; border-radius: 5px;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 2;
             overflow: hidden;
         }
         .open .letter {
-            width: 290px; height: 380px; bottom: 60px; opacity: 1; 
-            transform: translateX(-50%) translateY(-10px);
-            padding: 15px; box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            width: 320px; height: 450px; bottom: 50%; 
+            transform: translateX(-50%) translateY(50%); /* Đưa thư vào chính giữa */
+            opacity: 1; padding: 20px; box-shadow: 0 0 40px rgba(255,255,255,0.2);
             overflow-y: auto;
         }
         .open .gift-box-body::before { transform: translateY(-80px) rotate(-20deg); opacity: 0; }
 
-        .letter-text { display: none; text-align: left; color: #333; font-size: 13px; line-height: 1.6; }
+        .letter-text { display: none; text-align: left; color: #333; font-size: 14px; line-height: 1.6; }
         .open .letter-text { display: block; }
-        .letter-header { text-align: center; color: #d42424; font-weight: bold; font-size: 18px; margin-bottom: 15px; }
-        .wish-item { margin-bottom: 8px; border-bottom: 1px dotted #eee; padding-bottom: 4px; }
+        .letter-header { text-align: center; color: #d42424; font-weight: bold; font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid #f1f1f1; padding-bottom: 10px; }
+        .wish-item { margin-bottom: 12px; border-bottom: 1px dotted #eee; padding-bottom: 6px; }
         .name { font-weight: bold; color: #c0392b; }
+
+        /* Chữ BY HOT PHÒNG to */
+        .signature { text-align: center; font-weight: bold; font-size: 22px; color: #d42424; margin-top: 25px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+
+        /* Nút Đóng */
+        .close-btn { display: block; width: 100px; margin: 20px auto 10px; padding: 10px; background: #d42424; color: #fff; text-align: center; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(212,36,36,0.3); }
 
         .letter::-webkit-scrollbar { width: 4px; }
         .letter::-webkit-scrollbar-thumb { background: #d42424; border-radius: 10px; }
 
-        .box-disappear { 
-            animation: rotateAndAway 1.8s forwards ease-in !important; 
-            pointer-events: none;
-        }
+        .box-disappear { animation: rotateAndAway 1.8s forwards ease-in !important; pointer-events: none; }
         @keyframes rotateAndAway {
             0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
             100% { transform: translate(-50%, 120vh) rotate(540deg); opacity: 0; }
@@ -87,31 +91,33 @@
     <div id="snow-container"></div>
 
     <div id="gift-wrapper" class="gift-container">
-        <div class="letter" id="letter-close" onclick="toggleGift(event)">
+        <div class="letter" id="letter-close">
             <div class="letter-text">
                 <div class="letter-header">Hot Phòng ~</div>
                 
-                <div class="wish-item"><span class="name">blewiz.12:</span> Noel vui vẻ nha, chúc bạn luôn tỏa sáng, hạnh phúc và gặp nhiều điều may mắn trong cuộc sống! ✨</div>
-                <div class="wish-item"><span class="name">emm bé ~:</span> Noel vui vẻ nha, chúc bạn luôn giữ được sự đáng yêu, niềm vui và nụ cười rạng rỡ nhất! 🧸</div>
-                <div class="wish-item"><span class="name">thi:</span> Noel vui vẻ nha, chúc Thi một mùa Giáng sinh ấm áp, xinh đẹp và luôn tràn đầy năng lượng tích cực! ❄️</div>
-                <div class="wish-item"><span class="name">baolamm ?:</span> Noel vui vẻ nha, chúc bạn một mùa đông bình yên, vạn sự hanh thông và luôn thành công nhé! 🌟</div>
-                <div class="wish-item"><span class="name">ahh bo ~:</span> Noel vui vẻ nha, chúc Bo luôn phong độ, đạt được những mục tiêu lớn và luôn vui tươi! 🔥</div>
-                <div class="wish-item"><span class="name">lphuoc hau` 04:</span> Noel vui vẻ nha, chúc bạn một mùa lễ hội ngập tràn tình yêu thương và sự ấm áp bên gia đình! 🎄</div>
-                <div class="wish-item"><span class="name">die.4u~06:</span> Noel vui vẻ nha, chúc bạn luôn ngọt ngào, nhận được thật nhiều điều bất ngờ và ý nghĩa! 🎁</div>
-                <div class="wish-item"><span class="name">kieutien:</span> Noel vui vẻ nha, chúc Kiều Tiên luôn xinh đẹp, hạnh phúc và mọi ước nguyện đều trở thành hiện thực! 💖</div>
-                <div class="wish-item"><span class="name">vợ nhi😋:</span> Noel vui vẻ nha, chúc Nhi mãi là người hạnh phúc nhất, luôn được yêu thương và cùng nhau đón nhiều Noel nữa! 🍬</div>
-                <div class="wish-item"><span class="name">luve.hurts_:</span> Noel vui vẻ nha, chúc bạn tìm thấy những niềm vui mới, sự bình yên trong tâm hồn và luôn vững vàng! 🌈</div>
-                <div class="wish-item"><span class="name">th van ~:</span> Noel vui vẻ nha, chúc Vân một mùa đông không lạnh, luôn may mắn và gặt hái nhiều niềm vui! 🎈</div>
-                <div class="wish-item"><span class="name">ph thuy ~:</span> Noel vui vẻ nha, chúc Phương Thúy luôn rạng rỡ, thành đạt và có một đêm Giáng sinh tuyệt vời! 🌸</div>
-                <div class="wish-item"><span class="name">Tuấn anhh~:</span> Noel vui vẻ nha, chúc Tuấn Anh luôn mạnh mẽ, thành công trên con đường đã chọn và thật vui vẻ! ⚡</div>
-                <div class="wish-item"><span class="name">tín mìgói:</span> Noel vui vẻ nha, chúc Tín luôn lạc quan, công việc suôn sẻ và có nhiều sức khỏe để theo đuổi đam mê! 🍜</div>
-                <div class="wish-item"><span class="name">buon !:</span> Noel vui vẻ nha, chúc bạn xua tan mọi nỗi buồn, đón nhận hơi ấm và những điều tử tế nhất! 🕯️</div>
-                <div class="wish-item"><span class="name">nổ hũ nạpff:</span> Noel vui vẻ nha, chúc bạn luôn gặp may mắn lớn, mọi việc thuận lợi và Noel thật rực rỡ! 🎰</div>
-                <div class="wish-item"><span class="name">emm ngọcc ~:</span> Noel vui vẻ nha, chúc Ngọc luôn tỏa sáng như viên ngọc quý, hạnh phúc và được trân trọng! 💎</div>
-                <div class="wish-item"><span class="name">hiru No1 09:</span> Noel vui vẻ nha, chúc bạn giữ vững phong độ đỉnh cao, gặt hái nhiều thành tích mới và thật vui! 🏆</div>
-                <div class="wish-item"><span class="name">em ni (cqd):</span> Noel vui vẻ nha, chúc bạn luôn xinh xắn, bình yên và có một mùa Noel ngập tràn kỷ niệm đẹp! 🎀</div>
+                <div class="wish-item"><span class="name">blewiz.12:</span> Chúc bạn một mùa Giáng sinh ấm áp, luôn rạng rỡ và thành công trên con đường phía trước nhé! ✨</div>
+                <div class="wish-item"><span class="name">emm bé ~:</span> Chúc bạn Noel ngập tràn niềm vui, luôn giữ được sự hồn nhiên và nhận được thật nhiều quà! 🧸</div>
+                <div class="wish-item"><span class="name">thi:</span> Chúc Thi một đêm Giáng sinh lung linh, xinh đẹp và mọi điều ước đêm Noel đều thành sự thật! ❄️</div>
+                <div class="wish-item"><span class="name">baolamm ?:</span> Chúc bạn Noel bình yên, vạn sự như ý và có những phút giây thật ấm áp bên người thân! 🌟</div>
+                <div class="wish-item"><span class="name">ahh bo ~:</span> Chúc Bo một mùa lễ hội rực rỡ, luôn giữ vững phong độ và gặt hái thêm nhiều niềm vui! 🔥</div>
+                <div class="wish-item"><span class="name">lphuoc hau` 04:</span> Chúc bạn Giáng sinh an lành, vạn điều may mắn và luôn tràn đầy hạnh phúc! 🎄</div>
+                <div class="wish-item"><span class="name">die.4u~06:</span> Chúc bạn một mùa đông thật ấm, luôn ngọt ngào và có một đêm Giáng sinh tuyệt diệu! 🎁</div>
+                <div class="wish-item"><span class="name">kieutien:</span> Chúc Kiều Tiên luôn xinh đẹp, Giáng sinh vui vẻ và mọi điều tốt đẹp nhất sẽ đến với bạn! 💖</div>
+                <div class="wish-item"><span class="name">vợ nhi😋:</span> Chúc Nhi một mùa Noel hạnh phúc nhất, luôn tươi cười và mãi là bông hoa rực rỡ nhất! 🍬</div>
+                <div class="wish-item"><span class="name">luve.hurts_:</span> Chúc bạn Noel thật ấm áp, tìm thấy sự bình yên và những niềm vui mới trong cuộc sống! 🌈</div>
+                <div class="wish-item"><span class="name">th van ~:</span> Chúc Vân Noel vui vẻ, luôn may mắn, trẻ trung và nhận được nhiều tình yêu thương! 🎈</div>
+                <div class="wish-item"><span class="name">ph thuy ~:</span> Chúc Phương Thúy Giáng sinh rạng rỡ, thành công và luôn nở nụ cười trên môi nhé! 🌸</div>
+                <div class="wish-item"><span class="name">Tuấn anhh~:</span> Chúc Tuấn Anh Noel mạnh khỏe, vui vẻ và hoàn thành được mọi dự định trong năm mới! ⚡</div>
+                <div class="wish-item"><span class="name">tín mìgói:</span> Chúc Tín Noel ấm áp, ăn ngon ngủ ngon và luôn gặp những điều may mắn bất ngờ! 🍜</div>
+                <div class="wish-item"><span class="name">buon !:</span> Chúc bạn xua tan mọi nỗi buồn, đón nhận hơi ấm Noel và những điều khởi đầu tốt đẹp! 🕯️</div>
+                <div class="wish-item"><span class="name">nổ hũ nạpff:</span> Chúc bạn nạp đâu thắng đó, Noel rực rỡ và luôn gặp vận may lớn trong đời! 🎰</div>
+                <div class="wish-item"><span class="name">emm ngọcc ~:</span> Chúc Ngọc luôn tỏa sáng, có một đêm Giáng sinh ấm áp và trọn vẹn niềm vui! 💎</div>
+                <div class="wish-item"><span class="name">hiru No1 09:</span> Chúc bạn Noel thật "cháy", luôn dẫn đầu và gặt hái thật nhiều thành công mới! 🏆</div>
+                <div class="wish-item"><span class="name">em ni (cqd):</span> Chúc bạn một mùa Noel xinh xắn, bình yên và ngập tràn hạnh phúc bên người thân yêu! 🎀</div>
 
-                <p style="font-size: 11px; text-align: center; font-style: italic; color: #888; margin-top: 10px;">(Bấm để đóng & nhận bất ngờ từ Hot Phòng)</p>
+                <div class="signature">BY HOT PHÒNG ~</div>
+                
+                <div class="close-btn" onclick="toggleGift(event)">ĐÓNG</div>
             </div>
         </div>
         <div class="gift-box-body" id="target-box" onclick="toggleGift(event)"></div>
@@ -120,7 +126,7 @@
     <script>
         let isOpened = false;
         let spawnInterval = null;
-        let currentRate = 120;
+        let currentRate = 120; 
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -136,7 +142,7 @@
         });
 
         function toggleGift(e) {
-            e.stopPropagation();
+            if (e) e.stopPropagation();
             const wrapper = document.getElementById('gift-wrapper');
 
             if (!isOpened) {
@@ -147,6 +153,7 @@
                 setTimeout(() => {
                     wrapper.classList.add('box-disappear');
                     updateSpawnRate(60); 
+                    // Đợi 2 giây sau khi hộp quà rơi mới đổi hồng
                     setTimeout(() => {
                         document.body.classList.add('pink-activated');
                     }, 2000); 
@@ -186,16 +193,12 @@
             setTimeout(() => { item.remove(); }, duration * 1000);
         }
 
-        function startFalling() {
-            spawnInterval = setInterval(createFallingObject, currentRate);
-        }
-
+        function startFalling() { spawnInterval = setInterval(createFallingObject, currentRate); }
         function updateSpawnRate(newRate) {
             clearInterval(spawnInterval);
             currentRate = newRate;
             spawnInterval = setInterval(createFallingObject, currentRate);
         }
-
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
