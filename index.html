@@ -12,18 +12,20 @@
         #loading { position: fixed; inset: 0; background: #0b1120; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
         #loading img { width: 120px; }
 
-        /* LỚP TUYẾT & CHỮ - Đảm bảo không bao giờ bị ẩn */
+        /* LỚP TUYẾT & CHỮ */
         #snow-container { 
             position: fixed; 
             inset: 0; 
             pointer-events: none; 
-            z-index: 10; /* Nằm dưới lớp hộp quà */
+            z-index: 10; 
         }
 
         .falling-item { 
             position: absolute; top: -50px; white-space: nowrap; 
             animation: fall linear forwards; 
+            /* Thêm transition để đổi màu mượt mà */
             transition: color 2s ease, text-shadow 2s ease; 
+            color: rgba(255, 255, 255, 0.4);
         }
         
         @keyframes fall { 
@@ -32,19 +34,14 @@
             100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
         }
 
-        /* Chữ hồng nhạt lấp lánh cực đẹp */
-        .glitter-pink {
+        /* Chữ hồng nhạt lấp lánh khi kích hoạt pink-mode */
+        .pink-mode .falling-text {
             color: #FFB6C1 !important; 
-            text-shadow: 0 0 10px #FFB6C1, 0 0 20px #fff, 0 0 30px #FFB6C1 !important;
-            font-weight: bold !important;
-            animation: sparklePulse 1s infinite alternate !important;
-        }
-        @keyframes sparklePulse {
-            from { filter: brightness(1); opacity: 0.8; }
-            to { filter: brightness(1.4); opacity: 1; }
+            text-shadow: 0 0 10px #FFB6C1, 0 0 20px #fff;
+            font-weight: bold;
         }
 
-        /* VÙNG CHỨA HỘP QUÀ - Tách biệt hoàn toàn */
+        /* VÙNG CHỨA HỘP QUÀ */
         .gift-container {
             position: fixed; top: -300px; left: 50%; transform: translateX(-50%);
             z-index: 2000; cursor: pointer; 
@@ -58,32 +55,34 @@
             animation: swing 3s infinite ease-in-out;
         }
         @keyframes swing { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-        .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; }
+        .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; transition: all 0.5s; }
         .gift-box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
 
         .letter {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 80px; height: 50px; background: #fff; border-radius: 8px;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 2;
+            pointer-events: none; /* Tránh cản trở click vào box ban đầu */
         }
         .open .letter {
             width: 300px; height: 380px; bottom: 50px; opacity: 1; 
             transform: translateX(-50%) translateY(-20px);
             padding: 25px; box-shadow: 0 0 40px rgba(255,255,255,0.3);
+            pointer-events: auto;
         }
         .open .gift-box-body::before { transform: translateY(-80px) rotate(-20deg); opacity: 0; }
         .open .gift-box-body { animation: none; }
 
-        .letter-text { display: none; text-align: center; color: #333; }
+        .letter-text { display: none; text-align: center; color: #333; pointer-events: none; }
         .open .letter-text { display: block; animation: fadeIn 1s forwards; }
 
-        /* HIỆU ỨNG XOAY 1 VÒNG RƠI XUỐNG - Chỉ tác động lên BOX và LETTER */
-        .box-falling-animation { 
-            animation: rotateOnceAndFall 1.5s forwards ease-in !important; 
+        /* Hiệu ứng hộp quà biến mất */
+        .box-disappear { 
+            animation: rotateAndAway 1.5s forwards ease-in !important; 
         }
-        @keyframes rotateOnceAndFall {
-            0% { transform: rotate(0deg) translateY(0); opacity: 1; }
-            100% { transform: rotate(360deg) translateY(120vh); opacity: 0; }
+        @keyframes rotateAndAway {
+            0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
+            100% { transform: translate(-50%, 120vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
@@ -94,7 +93,7 @@
     <div id="snow-container"></div>
 
     <div id="gift-wrapper" class="gift-container">
-        <div class="letter" id="letter-close">
+        <div class="letter" id="letter-close" onclick="toggleGift(event)">
             <div class="letter-text">
                 <h2 style="color: #d42424; margin-bottom: 15px;">Thân Gửi ❤️</h2>
                 <p>Chúc bạn một ngày thật tuyệt vời!</p>
@@ -102,19 +101,17 @@
                 <p style="font-size: 13px; font-style: italic; color: #777;">(Bấm vào thư để đóng lại & nhận bất ngờ)</p>
             </div>
         </div>
-        <div class="gift-box-body" id="target-box" onclick="toggleGift()"></div>
+        <div class="gift-box-body" id="target-box" onclick="toggleGift(event)"></div>
     </div>
 
     <script>
         let isOpened = false;
-        let pinkMode = false;
 
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('loading').style.opacity = '0';
                 setTimeout(() => { 
                     document.getElementById('loading').style.display = 'none'; 
-                    // CHỜ ĐÚNG 5 GIÂY HỘP QUÀ MỚI XUẤT HIỆN
                     setTimeout(() => {
                         document.getElementById('gift-wrapper').classList.add('gift-at-center');
                     }, 5000);
@@ -122,37 +119,27 @@
             }, 1000);
         });
 
-        function toggleGift() {
+        function toggleGift(e) {
+            e.stopPropagation();
             const wrapper = document.getElementById('gift-wrapper');
-            const box = document.getElementById('target-box');
-            const letter = document.getElementById('letter-close');
 
             if (!isOpened) {
                 wrapper.classList.add('open');
                 isOpened = true;
             } else {
-                // ĐÓNG LẠI
+                // ĐÓNG LẠI VÀ BIẾN MẤT
                 wrapper.classList.remove('open');
                 
                 setTimeout(() => {
-                    // 1. Chỉ hộp quà xoay và rơi
-                    box.classList.add('box-falling-animation');
-                    letter.style.opacity = '0'; 
-
-                    // 2. Chuyển chữ sang hồng lấp lánh
-                    pinkMode = true;
-                    // Nhuộm hồng ngay lập tức các chữ đang bay
-                    document.querySelectorAll('.falling-item').forEach(item => {
-                        if (item.innerText.includes('hot phòng')) {
-                            item.classList.add('glitter-pink');
-                        }
-                    });
+                    // Thêm class biến mất cho toàn bộ wrapper (hộp + thư)
+                    wrapper.classList.add('box-disappear');
+                    
+                    // Kích hoạt chế độ hồng cho toàn trang
+                    document.body.classList.add('pink-mode');
                 }, 600);
             }
         }
         
-        document.getElementById('letter-close').onclick = toggleGift;
-
         function createFallingObject() {
             const container = document.getElementById('snow-container');
             const item = document.createElement('div');
@@ -163,12 +150,8 @@
 
             if (rand < 0.6) { 
                 item.innerText = 'hot phòng ~';
+                item.classList.add('falling-text'); // Thêm class để dễ nhuộm hồng
                 item.style.fontSize = (Math.random() * 4 + 11) + 'px';
-                if (pinkMode) {
-                    item.classList.add('glitter-pink');
-                } else {
-                    item.style.color = 'rgba(255, 255, 255, 0.4)';
-                }
                 maxOpacity = 0.7;
             } else if (rand < 0.8) { 
                 const img = document.createElement('img');
@@ -188,6 +171,7 @@
 
             setTimeout(() => { item.remove(); }, duration * 1000);
         }
+
         setInterval(createFallingObject, 250);
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
