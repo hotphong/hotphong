@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-    <title>nvinhtool.click - Final Boom</title>
+    <title>nvinhtool.click - Optimized</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body, html { background: #0b1120; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
@@ -12,14 +12,14 @@
         #loading { position: fixed; inset: 0; background: #0b1120; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
         #loading img { width: 120px; }
 
-        /* Container cho hiệu ứng rơi */
+        /* Container rơi */
         #snow-container { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
 
         .falling-item { 
             position: absolute; top: -50px; white-space: nowrap; 
             animation: fall linear forwards; 
-            /* Đổi màu mượt mà trong 3 giây */
-            transition: color 3s ease, text-shadow 3s ease, filter 3s ease; 
+            /* Transition màu để tạo hiệu ứng đổi màu mượt */
+            transition: color 3s ease, text-shadow 3s ease; 
             color: rgba(255, 255, 255, 0.4);
         }
         
@@ -29,14 +29,11 @@
             100% { transform: translateY(110vh) rotate(20deg); opacity: 0; } 
         }
 
-        /* Khi vào chế độ hồng: Chữ đổi màu, GIF có thể thêm hiệu ứng sáng */
-        .pink-mode .falling-text {
+        /* Chế độ hồng - Sẽ được kích hoạt sau 2 giây delay */
+        .pink-activated .falling-text {
             color: #FFB6C1 !important; 
             text-shadow: 0 0 10px #FFB6C1, 0 0 20px #fff;
             font-weight: bold;
-        }
-        .pink-mode .falling-item img {
-            filter: drop-shadow(0 0 5px #FFB6C1);
         }
 
         /* Hộp quà */
@@ -56,22 +53,23 @@
         .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; transition: 0.5s; }
         .gift-box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
 
+        /* Lá thư nhỏ gọn hơn */
         .letter {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 50px; background: #fff; border-radius: 8px;
+            width: 60px; height: 40px; background: #fff; border-radius: 5px;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 2;
         }
         .open .letter {
-            width: 300px; height: 380px; bottom: 50px; opacity: 1; 
-            transform: translateX(-50%) translateY(-20px);
-            padding: 25px; box-shadow: 0 0 40px rgba(255,255,255,0.3);
+            width: 260px; height: 320px; bottom: 60px; opacity: 1; 
+            transform: translateX(-50%) translateY(-10px);
+            padding: 20px; box-shadow: 0 0 30px rgba(255,255,255,0.2);
         }
         .open .gift-box-body::before { transform: translateY(-80px) rotate(-20deg); opacity: 0; }
 
-        .letter-text { display: none; text-align: center; color: #333; }
+        .letter-text { display: none; text-align: center; color: #333; font-size: 14px; }
         .open .letter-text { display: block; }
 
-        /* Hiệu ứng hộp quà rơi mất */
+        /* Hộp quà biến mất */
         .box-disappear { 
             animation: rotateAndAway 1.8s forwards ease-in !important; 
             pointer-events: none;
@@ -90,10 +88,11 @@
     <div id="gift-wrapper" class="gift-container">
         <div class="letter" id="letter-close" onclick="toggleGift(event)">
             <div class="letter-text">
-                <h2 style="color: #d42424; margin-bottom: 15px;">Thân Gửi ❤️</h2>
-                <p>Chúc bạn một ngày thật tuyệt vời!</p>
-                <div style="font-size: 50px; margin: 25px 0;">🎁✨</div>
-                <p style="font-size: 12px; font-style: italic; color: #777;">(Bấm vào thư để nhận bất ngờ lớn)</p>
+                <h3 style="color: #d42424; margin-bottom: 10px;">Thân Gửi ❤️</h3>
+                <p>Chúc bạn một ngày</p>
+                <p>thật hạnh phúc!</p>
+                <div style="font-size: 40px; margin: 15px 0;">🎁✨</div>
+                <p style="font-size: 11px; font-style: italic; color: #888;">(Bấm để đóng & nhận bất ngờ)</p>
             </div>
         </div>
         <div class="gift-box-body" id="target-box" onclick="toggleGift(event)"></div>
@@ -102,7 +101,7 @@
     <script>
         let isOpened = false;
         let spawnInterval = null;
-        let currentRate = 250; // Tốc độ ban đầu (ms)
+        let currentRate = 120; // Tăng số lượng ngay khi vào web (trước là 250)
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -115,7 +114,6 @@
                 }, 800);
             }, 1000);
             
-            // Khởi tạo vòng lặp rơi ban đầu
             startFalling();
         });
 
@@ -130,15 +128,17 @@
                 wrapper.classList.remove('open');
                 
                 setTimeout(() => {
-                    // 1. Cho hộp quà bay màu
+                    // 1. Hộp quà biến mất
                     wrapper.classList.add('box-disappear');
                     
-                    // 2. Kích hoạt Pink Mode (đổi màu chữ từ từ)
-                    document.body.classList.add('pink-mode');
+                    // 2. Tăng số lượng rơi lên mức tối đa ngay lập tức
+                    updateSpawnRate(60); 
 
-                    // 3. BÙNG NỔ: Tăng tốc độ tạo cho TẤT CẢ vật thể
-                    // Từ 250ms/vật thể xuống còn 70ms/vật thể (rơi cực dày)
-                    updateSpawnRate(70); 
+                    // 3. Đợi 2 giây sau khi hộp quà biến mất mới đổi sang màu hồng
+                    setTimeout(() => {
+                        document.body.classList.add('pink-activated');
+                    }, 2000); 
+
                 }, 600);
             }
         }
@@ -150,39 +150,32 @@
             
             const rand = Math.random();
             let maxOpacity = 0.5;
-            const isPink = document.body.classList.contains('pink-mode');
+            const isPink = document.body.classList.contains('pink-activated');
 
-            // Logic chọn loại vật thể (vẫn giữ tỉ lệ như cũ nhưng số lượng tạo ra sẽ nhiều hơn)
-            if (rand < 0.5) { 
-                // Chữ hot phòng
+            if (rand < 0.4) { 
                 item.innerText = 'hot phòng ~';
                 item.classList.add('falling-text');
-                item.style.fontSize = (Math.random() * 5 + 12) + 'px';
+                item.style.fontSize = (Math.random() * 4 + 11) + 'px';
                 maxOpacity = 0.8;
-            } else if (rand < 0.8) { 
-                // Ảnh GIF lấp lánh
+            } else if (rand < 0.75) { 
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/GkOGd5X6gdP1tfF4zx/giphy.gif';
-                img.style.width = isPink ? '22px' : '15px'; 
+                img.style.width = isPink ? '20px' : '14px'; 
                 item.appendChild(img);
-                maxOpacity = 1;
+                maxOpacity = 0.9;
             } else { 
-                // Tuyết rơi
                 item.innerHTML = '❄';
-                item.style.color = isPink ? 'rgba(255, 182, 193, 0.8)' : 'rgba(255, 255, 255, 0.6)';
-                maxOpacity = 0.7;
+                item.style.color = isPink ? 'rgba(255, 182, 193, 0.7)' : 'rgba(255, 255, 255, 0.5)';
+                maxOpacity = 0.6;
             }
             
             item.style.setProperty('--max-opacity', maxOpacity);
             item.style.left = Math.random() * 100 + 'vw';
             
-            // Khi vào Pink Mode, cho rơi nhanh hơn một chút để tăng cảm giác kịch tính
-            const duration = isPink ? (Math.random() * 3 + 3) : (Math.random() * 5 + 7);
+            const duration = isPink ? (Math.random() * 3 + 3) : (Math.random() * 5 + 6);
             item.style.animationDuration = duration + 's';
             
             container.appendChild(item);
-
-            // Xóa phần tử sau khi rơi xong để nhẹ máy
             setTimeout(() => { item.remove(); }, duration * 1000);
         }
 
