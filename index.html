@@ -34,10 +34,10 @@
         }
 
         #loading img { 
-            width: 120px; /* Độ lớn của GIF loading */
+            width: 120px; 
         }
 
-        /* Container Tuyết rơi */
+        /* Container Tuyết và Cây thông rơi */
         #snow-container { 
             position: fixed; 
             top: 0; 
@@ -50,14 +50,14 @@
 
         .snowflake { 
             position: absolute; 
-            top: -20px; 
-            color: #fff; 
+            top: -50px; 
             animation: fall linear forwards; 
         }
 
+        /* Hiệu ứng rơi */
         @keyframes fall { 
-            0% { transform: translateY(0); opacity: 0.5; } 
-            100% { transform: translateY(105vh); opacity: 0; } 
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; } 
+            100% { transform: translateY(110vh) rotate(20deg); opacity: 0; } 
         }
     </style>
 </head>
@@ -81,16 +81,28 @@
             }, 1500);
         });
 
-        // Hàm tạo tuyết rơi
-        function createSnow() {
+        // Hàm tạo vật thể rơi (tuyết hoặc cây thông)
+        function createFallingObject() {
             const container = document.getElementById('snow-container');
             const flake = document.createElement('div');
             flake.className = 'snowflake';
-            flake.innerHTML = '❄';
+            
+            // Tỷ lệ 30% ra cây thông, 70% ra bông tuyết
+            const isTree = Math.random() < 0.3;
+
+            if (isTree) {
+                const img = document.createElement('img');
+                img.src = 'https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybXZqM3FmbmU4NThpdWFldmoyNzg2ZDdqaXY4MHF4azRxYzI1bzFlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GkOGd5X6gdP1tfF4zx/giphy.gif';
+                img.style.width = (Math.random() * 15 + 15) + 'px'; // Kích thước cây thông nhỏ (15-30px)
+                flake.appendChild(img);
+            } else {
+                flake.innerHTML = '❄';
+                flake.style.color = '#fff';
+                flake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            }
             
             flake.style.left = Math.random() * 100 + 'vw';
-            flake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-            flake.style.opacity = Math.random() * 0.5;
+            flake.style.opacity = Math.random() * 0.7 + 0.3;
             
             const duration = Math.random() * 4 + 6;
             flake.style.animationDuration = duration + 's';
@@ -102,8 +114,8 @@
             }, duration * 1000);
         }
 
-        // Tạo tuyết liên tục
-        setInterval(createSnow, 300);
+        // Tạo rơi liên tục
+        setInterval(createFallingObject, 250);
 
         // Bảo mật cơ bản
         document.addEventListener('contextmenu', e => e.preventDefault());
