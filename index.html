@@ -17,7 +17,7 @@
         .falling-item { 
             position: absolute; top: -50px; white-space: nowrap; 
             animation: fall linear forwards; 
-            transition: color 2s ease, text-shadow 2s ease; /* Chuyển màu từ từ */
+            transition: color 1.5s ease, text-shadow 1.5s ease;
         }
         
         @keyframes fall { 
@@ -26,10 +26,11 @@
             100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
         }
 
-        /* Màu hồng lấp lánh */
+        /* Màu hồng lấp lánh cực đẹp */
         .glitter-pink {
             color: #ff69b4 !important;
-            text-shadow: 0 0 8px #ff1493, 0 0 15px #ff69b4 !important;
+            text-shadow: 0 0 10px #ff1493, 0 0 20px #ff69b4, 0 0 30px #ff1493 !important;
+            font-weight: bold !important;
         }
 
         /* Hộp quà đáp ở giữa */
@@ -76,12 +77,12 @@
         .open .letter-text { display: block; animation: fadeIn 1s forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Hộp quà bay biến mất */
-        .fly-down { animation: flyOutDown 1.5s ease-in forwards !important; }
+        /* Hộp quà xoay và rơi xuống dưới */
+        .fly-down { animation: flyOutDown 1.8s ease-in forwards !important; }
         @keyframes flyOutDown {
             0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-            30% { transform: translate(-50%, -50%) rotate(360deg) scale(1.2); }
-            100% { transform: translate(-50%, 500%) rotate(720deg) scale(0); }
+            40% { transform: translate(-50%, -50%) rotate(720deg) scale(1.1); }
+            100% { transform: translate(-50%, 500vh) rotate(1440deg) scale(0); }
         }
     </style>
 </head>
@@ -111,7 +112,6 @@
                 document.getElementById('loading').style.opacity = '0';
                 setTimeout(() => { 
                     document.getElementById('loading').style.display = 'none'; 
-                    // Sau 5 giây, hộp quà từ từ đáp xuống giữa
                     setTimeout(() => {
                         document.getElementById('gift-wrapper').classList.add('gift-at-center');
                     }, 5000);
@@ -125,13 +125,21 @@
                 gift.classList.add('open');
                 isOpened = true;
             } else {
+                // Đóng lá thư trước
                 gift.classList.remove('open');
+                
+                // Sau khi nắp đậy lại, bắt đầu xoay và rơi
                 setTimeout(() => {
                     gift.classList.add('fly-down');
-                    // Khi hộp quà bắt đầu bay mất, kích hoạt chế độ hồng lấp lánh
-                    setTimeout(() => {
-                        pinkMode = true;
-                    }, 500);
+                    
+                    // Chuyển toàn bộ các chữ ĐANG RƠI sang màu hồng ngay lập tức
+                    pinkMode = true;
+                    const items = document.querySelectorAll('.falling-item');
+                    items.forEach(item => {
+                        if (item.innerText.includes('hot phòng')) {
+                            item.classList.add('glitter-pink');
+                        }
+                    });
                 }, 600);
             }
         }
@@ -143,26 +151,26 @@
             const item = document.createElement('div');
             item.className = 'falling-item';
             
-            // Nếu đã kích hoạt pinkMode, thêm class hồng lấp lánh
-            if (pinkMode) {
-                item.classList.add('glitter-pink');
-            }
-
             const rand = Math.random();
             let maxOpacity = 0.5;
 
-            if (rand < 0.6) { 
+            if (rand < 0.6) { // Chữ "hot phòng ~"
                 item.innerText = 'hot phòng ~';
-                item.style.color = pinkMode ? '' : 'rgba(255, 255, 255, 0.4)'; 
+                // Nếu đang trong chế độ pinkMode thì gán màu hồng luôn cho vật thể mới
+                if (pinkMode) {
+                    item.classList.add('glitter-pink');
+                } else {
+                    item.style.color = 'rgba(255, 255, 255, 0.4)';
+                }
                 item.style.fontSize = (Math.random() * 5 + 13) + 'px';
                 maxOpacity = 0.5;
-            } else if (rand < 0.8) { 
+            } else if (rand < 0.8) { // Cây thông Noel
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybXZqM3FmbmU4NThpdWFldmoyNzg2ZDdqaXY4MHF4azRxYzI1bzFlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GkOGd5X6gdP1tfF4zx/giphy.gif';
                 img.style.width = (Math.random() * 10 + 15) + 'px';
                 img.style.filter = 'opacity(0.6)'; 
                 item.appendChild(img);
-            } else { 
+            } else { // Tuyết rơi
                 item.innerHTML = '❄';
                 item.style.color = 'rgba(255, 255, 255, 0.6)';
                 item.style.fontSize = (Math.random() * 10 + 12) + 'px';
