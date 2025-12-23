@@ -48,7 +48,6 @@
         .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; transition: 0.5s; }
         .gift-box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
 
-        /* Lá thư căn giữa dễ đọc */
         .letter {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 50px; height: 30px; background: #fff; border-radius: 5px;
@@ -57,7 +56,7 @@
         }
         .open .letter {
             width: 320px; height: 450px; bottom: 50%; 
-            transform: translateX(-50%) translateY(50%); /* Đưa thư vào chính giữa */
+            transform: translateX(-50%) translateY(50%);
             opacity: 1; padding: 20px; box-shadow: 0 0 40px rgba(255,255,255,0.2);
             overflow-y: auto;
         }
@@ -69,11 +68,8 @@
         .wish-item { margin-bottom: 12px; border-bottom: 1px dotted #eee; padding-bottom: 6px; }
         .name { font-weight: bold; color: #c0392b; }
 
-        /* Chữ BY HOT PHÒNG to */
-        .signature { text-align: center; font-weight: bold; font-size: 22px; color: #d42424; margin-top: 25px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-
-        /* Nút Đóng */
-        .close-btn { display: block; width: 100px; margin: 20px auto 10px; padding: 10px; background: #d42424; color: #fff; text-align: center; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(212,36,36,0.3); }
+        .signature { text-align: center; font-weight: bold; font-size: 24px; color: #d42424; margin-top: 30px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .close-btn { display: block; width: 120px; margin: 25px auto 10px; padding: 12px; background: #d42424; color: #fff; text-align: center; border-radius: 25px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(212,36,36,0.3); }
 
         .letter::-webkit-scrollbar { width: 4px; }
         .letter::-webkit-scrollbar-thumb { background: #d42424; border-radius: 10px; }
@@ -95,25 +91,25 @@
             <div class="letter-text">
                 <div class="letter-header">Hot Phòng ~</div>
                 
-                <div class="wish-item"><span class="name">blewiz.12:</span> Chúc bạn một mùa Giáng sinh ấm áp, luôn rạng rỡ và thành công trên con đường phía trước nhé! ✨</div>
-                <div class="wish-item"><span class="name">emm bé ~:</span> Chúc bạn Noel ngập tràn niềm vui, luôn giữ được sự hồn nhiên và nhận được thật nhiều quà! 🧸</div>
-                <div class="wish-item"><span class="name">thi:</span> Chúc Thi một đêm Giáng sinh lung linh, xinh đẹp và mọi điều ước đêm Noel đều thành sự thật! ❄️</div>
-                <div class="wish-item"><span class="name">baolamm ?:</span> Chúc bạn Noel bình yên, vạn sự như ý và có những phút giây thật ấm áp bên người thân! 🌟</div>
-                <div class="wish-item"><span class="name">ahh bo ~:</span> Chúc Bo một mùa lễ hội rực rỡ, luôn giữ vững phong độ và gặt hái thêm nhiều niềm vui! 🔥</div>
-                <div class="wish-item"><span class="name">lphuoc hau` 04:</span> Chúc bạn Giáng sinh an lành, vạn điều may mắn và luôn tràn đầy hạnh phúc! 🎄</div>
-                <div class="wish-item"><span class="name">die.4u~06:</span> Chúc bạn một mùa đông thật ấm, luôn ngọt ngào và có một đêm Giáng sinh tuyệt diệu! 🎁</div>
-                <div class="wish-item"><span class="name">kieutien:</span> Chúc Kiều Tiên luôn xinh đẹp, Giáng sinh vui vẻ và mọi điều tốt đẹp nhất sẽ đến với bạn! 💖</div>
-                <div class="wish-item"><span class="name">vợ nhi😋:</span> Chúc Nhi một mùa Noel hạnh phúc nhất, luôn tươi cười và mãi là bông hoa rực rỡ nhất! 🍬</div>
-                <div class="wish-item"><span class="name">luve.hurts_:</span> Chúc bạn Noel thật ấm áp, tìm thấy sự bình yên và những niềm vui mới trong cuộc sống! 🌈</div>
-                <div class="wish-item"><span class="name">th van ~:</span> Chúc Vân Noel vui vẻ, luôn may mắn, trẻ trung và nhận được nhiều tình yêu thương! 🎈</div>
-                <div class="wish-item"><span class="name">ph thuy ~:</span> Chúc Phương Thúy Giáng sinh rạng rỡ, thành công và luôn nở nụ cười trên môi nhé! 🌸</div>
-                <div class="wish-item"><span class="name">Tuấn anhh~:</span> Chúc Tuấn Anh Noel mạnh khỏe, vui vẻ và hoàn thành được mọi dự định trong năm mới! ⚡</div>
-                <div class="wish-item"><span class="name">tín mìgói:</span> Chúc Tín Noel ấm áp, ăn ngon ngủ ngon và luôn gặp những điều may mắn bất ngờ! 🍜</div>
-                <div class="wish-item"><span class="name">buon !:</span> Chúc bạn xua tan mọi nỗi buồn, đón nhận hơi ấm Noel và những điều khởi đầu tốt đẹp! 🕯️</div>
-                <div class="wish-item"><span class="name">nổ hũ nạpff:</span> Chúc bạn nạp đâu thắng đó, Noel rực rỡ và luôn gặp vận may lớn trong đời! 🎰</div>
-                <div class="wish-item"><span class="name">emm ngọcc ~:</span> Chúc Ngọc luôn tỏa sáng, có một đêm Giáng sinh ấm áp và trọn vẹn niềm vui! 💎</div>
-                <div class="wish-item"><span class="name">hiru No1 09:</span> Chúc bạn Noel thật "cháy", luôn dẫn đầu và gặt hái thật nhiều thành công mới! 🏆</div>
-                <div class="wish-item"><span class="name">em ni (cqd):</span> Chúc bạn một mùa Noel xinh xắn, bình yên và ngập tràn hạnh phúc bên người thân yêu! 🎀</div>
+                <div class="wish-item"><span class="name">blewiz.12:</span> Noel vui vẻ nha, chúc luôn rạng rỡ, bình an và ngập tràn hạnh phúc trong đêm Giáng sinh! ✨</div>
+                <div class="wish-item"><span class="name">emm bé ~:</span> Noel vui vẻ nha, chúc luôn đáng yêu, được yêu thương và nhận được thật nhiều quà Giáng sinh! 🧸</div>
+                <div class="wish-item"><span class="name">thi:</span> Noel vui vẻ nha, chúc Thi luôn xinh đẹp, lung linh như ánh đèn đêm Noel và vạn sự như ý! ❄️</div>
+                <div class="wish-item"><span class="name">baolamm ?:</span> Noel vui vẻ nha, chúc luôn giữ được sự ấm áp, bình yên và đón một mùa Giáng sinh trọn vẹn! 🌟</div>
+                <div class="wish-item"><span class="name">ahh bo ~:</span> Noel vui vẻ nha, chúc luôn vui tươi, đạt được nhiều thành công và rực rỡ dưới ánh sao đêm lễ! 🔥</div>
+                <div class="wish-item"><span class="name">lphuoc hau` 04:</span> Noel vui vẻ nha, chúc một mùa đông không lạnh, ngập tràn niềm vui và sự ấm cúng đêm Giáng sinh! 🎄</div>
+                <div class="wish-item"><span class="name">die.4u~06:</span> Noel vui vẻ nha, chúc luôn ngọt ngào, gặp thật nhiều may mắn và có những kỷ niệm đẹp đêm nay! 🎁</div>
+                <div class="wish-item"><span class="name">kieutien:</span> Noel vui vẻ nha, chúc Kiều Tiên luôn rạng ngời, hạnh phúc và nhận được những điều tuyệt vời nhất! 💖</div>
+                <div class="wish-item"><span class="name">vợ nhi😋:</span> Noel vui vẻ nha, chúc Nhi luôn là người hạnh phúc nhất, mãi xinh đẹp và ấm áp trong mùa lễ hội! 🍬</div>
+                <div class="wish-item"><span class="name">luve.hurts_:</span> Noel vui vẻ nha, chúc luôn bình yên, gạt bỏ muộn phiền và đón nhận thật nhiều hơi ấm đêm Noel! 🌈</div>
+                <div class="wish-item"><span class="name">th van ~:</span> Noel vui vẻ nha, chúc Vân luôn gặp may mắn, trẻ trung và hưởng trọn không khí Giáng sinh an lành! 🎈</div>
+                <div class="wish-item"><span class="name">ph thuy ~:</span> Noel vui vẻ nha, chúc Phương Thúy luôn rạng rỡ, thành đạt và có một mùa lễ hội thật đáng nhớ! 🌸</div>
+                <div class="wish-item"><span class="name">Tuấn anhh~:</span> Noel vui vẻ nha, chúc Tuấn Anh luôn mạnh mẽ, vui tươi và có một đêm Giáng sinh thật ý nghĩa! ⚡</div>
+                <div class="wish-item"><span class="name">tín mìgói:</span> Noel vui vẻ nha, chúc Tín luôn lạc quan, nhiều sức khỏe và có một đêm Noel thật ấm bụng, ấm lòng! 🍜</div>
+                <div class="wish-item"><span class="name">buon !:</span> Noel vui vẻ nha, chúc xua tan mọi nỗi buồn, đón nhận tình yêu thương và sự an lành đêm Giáng sinh! 🕯️</div>
+                <div class="wish-item"><span class="name">nổ hũ nạpff:</span> Noel vui vẻ nha, chúc nạp đâu trúng đó, may mắn đầy mình và hưởng một mùa Noel thật hên! 🎰</div>
+                <div class="wish-item"><span class="name">emm ngọcc ~:</span> Noel vui vẻ nha, chúc Ngọc luôn tỏa sáng như viên ngọc, trân quý mọi khoảnh khắc đêm Giáng sinh! 💎</div>
+                <div class="wish-item"><span class="name">hiru No1 09:</span> Noel vui vẻ nha, chúc luôn giữ vững phong độ, dẫn đầu niềm vui và đón Noel thật rực rỡ! 🏆</div>
+                <div class="wish-item"><span class="name">em ni (cqd):</span> Noel vui vẻ nha, chúc luôn xinh xắn, ngoan ngoãn và đón một mùa Giáng sinh ấm áp nhất! 🎀</div>
 
                 <div class="signature">BY HOT PHÒNG ~</div>
                 
@@ -153,7 +149,6 @@
                 setTimeout(() => {
                     wrapper.classList.add('box-disappear');
                     updateSpawnRate(60); 
-                    // Đợi 2 giây sau khi hộp quà rơi mới đổi hồng
                     setTimeout(() => {
                         document.body.classList.add('pink-activated');
                     }, 2000); 
