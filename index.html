@@ -55,12 +55,12 @@
             animation: fall linear forwards; 
         }
 
-        /* Hiệu ứng rơi */
+        /* Hiệu ứng rơi mượt mà */
         @keyframes fall { 
             0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
+            15% { opacity: var(--max-opacity); } /* Hiện lên theo độ mờ định sẵn */
+            85% { opacity: var(--max-opacity); }
+            100% { transform: translateY(110vh) rotate(10deg); opacity: 0; } 
         }
     </style>
 </head>
@@ -84,36 +84,42 @@
             }, 1500);
         });
 
-        // Hàm tạo vật thể rơi
         function createFallingObject() {
             const container = document.getElementById('snow-container');
             const item = document.createElement('div');
             item.className = 'falling-item';
             
-            // Random loại: 0 = Tuyết, 1 = Cây thông, 2 = Chữ "hot phòng ~"
             const rand = Math.random();
+            let maxOpacity = 0.5; // Mặc định độ mờ nhạt (50%)
 
-            if (rand < 0.2) { 
-                // Tỉ lệ 20% rơi chữ "hot phòng ~"
+            if (rand < 0.25) { 
+                // Rơi chữ "hot phòng ~" (Màu trắng nhạt, nhỏ)
                 item.innerText = 'hot phòng ~';
-                item.style.color = '#ffffff';
-                item.style.fontSize = (Math.random() * 5 + 12) + 'px';
-                item.style.fontWeight = 'bold';
-            } else if (rand < 0.45) { 
-                // Tỉ lệ 25% rơi cây thông
+                item.style.color = 'rgba(255, 255, 255, 0.6)'; // Màu trắng có độ trong suốt
+                item.style.fontSize = (Math.random() * 4 + 11) + 'px';
+                item.style.fontWeight = '300';
+                maxOpacity = 0.4; // Chữ cho nhạt hơn nữa để giống tuyết
+            } else if (rand < 0.5) { 
+                // Rơi cây thông Noel
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybXZqM3FmbmU4NThpdWFldmoyNzg2ZDdqaXY4MHF4azRxYzI1bzFlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GkOGd5X6gdP1tfF4zx/giphy.gif';
-                img.style.width = (Math.random() * 15 + 15) + 'px';
+                img.style.width = (Math.random() * 12 + 15) + 'px';
+                img.style.filter = 'opacity(0.7)'; // Làm GIF nhạt bớt cho đồng bộ
                 item.appendChild(img);
+                maxOpacity = 0.7;
             } else { 
-                // Tỉ lệ 55% rơi bông tuyết
+                // Rơi bông tuyết ❄
                 item.innerHTML = '❄';
                 item.style.color = '#fff';
-                item.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                item.style.fontSize = (Math.random() * 8 + 10) + 'px';
+                maxOpacity = 0.6;
             }
             
-            item.style.left = Math.random() * 90 + 'vw'; // Giới hạn 90vw để không bị tràn lề phải
-            const duration = Math.random() * 4 + 6;
+            // Truyền độ mờ vào CSS Animation
+            item.style.setProperty('--max-opacity', maxOpacity);
+            
+            item.style.left = Math.random() * 95 + 'vw';
+            const duration = Math.random() * 5 + 6; 
             item.style.animationDuration = duration + 's';
 
             container.appendChild(item);
@@ -123,8 +129,8 @@
             }, duration * 1000);
         }
 
-        // Tạo rơi liên tục (250ms tạo 1 cái)
-        setInterval(createFallingObject, 250);
+        // Tạo rơi liên tục
+        setInterval(createFallingObject, 300);
 
         // Bảo mật cơ bản
         document.addEventListener('contextmenu', e => e.preventDefault());
