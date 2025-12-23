@@ -12,12 +12,12 @@
         #loading { position: fixed; inset: 0; background: #0b1120; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
         #loading img { width: 120px; }
 
-        /* LỚP TUYẾT RƠI - Tách riêng biệt hoàn toàn */
-        #snow-layer { 
+        /* LỚP TUYẾT & CHỮ - Đảm bảo không bao giờ bị ẩn */
+        #snow-container { 
             position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
+            inset: 0; 
             pointer-events: none; 
-            z-index: 10; /* Nằm dưới hộp quà */
+            z-index: 10; /* Nằm dưới lớp hộp quà */
         }
 
         .falling-item { 
@@ -32,57 +32,58 @@
             100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
         }
 
-        /* Chữ hồng nhạt lấp lánh */
+        /* Chữ hồng nhạt lấp lánh cực đẹp */
         .glitter-pink {
             color: #FFB6C1 !important; 
             text-shadow: 0 0 10px #FFB6C1, 0 0 20px #fff, 0 0 30px #FFB6C1 !important;
             font-weight: bold !important;
-            animation: pinkSparkle 1.5s infinite alternate !important;
+            animation: sparklePulse 1s infinite alternate !important;
         }
-        @keyframes pinkSparkle {
-            0% { filter: brightness(1); opacity: 0.8; transform: scale(1); }
-            100% { filter: brightness(1.3); opacity: 1; transform: scale(1.05); }
+        @keyframes sparklePulse {
+            from { filter: brightness(1); opacity: 0.8; }
+            to { filter: brightness(1.4); opacity: 1; }
         }
 
-        /* LỚP HỘP QUÀ */
-        .gift-wrapper {
+        /* VÙNG CHỨA HỘP QUÀ - Tách biệt hoàn toàn */
+        .gift-container {
             position: fixed; top: -300px; left: 50%; transform: translateX(-50%);
-            z-index: 100; cursor: pointer; 
+            z-index: 2000; cursor: pointer; 
             transition: top 3s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .gift-at-center { top: 50% !important; transform: translate(-50%, -50%) !important; }
 
-        .box-body {
+        .gift-box-body {
             position: relative; width: 100px; height: 85px; background: #d42424;
             border-radius: 5px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
             animation: swing 3s infinite ease-in-out;
         }
         @keyframes swing { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-        .box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; }
-        .box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
+        .gift-box-body::before { content: ''; position: absolute; width: 110px; height: 25px; background: #e74c3c; top: -25px; left: -5px; border-radius: 3px; z-index: 5; }
+        .gift-box-body::after { content: ''; position: absolute; width: 20px; height: 100%; background: #ffdb11; left: 50%; transform: translateX(-50%); }
 
         .letter {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 80px; height: 50px; background: #fff; border-radius: 8px;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: -1;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 2;
         }
         .open .letter {
             width: 300px; height: 380px; bottom: 50px; opacity: 1; 
             transform: translateX(-50%) translateY(-20px);
-            padding: 25px; box-shadow: 0 0 40px rgba(255,255,255,0.3); z-index: 2;
+            padding: 25px; box-shadow: 0 0 40px rgba(255,255,255,0.3);
         }
-        .open .box-body::before { transform: translateY(-80px) rotate(-20deg); opacity: 0; transition: 0.6s; }
+        .open .gift-box-body::before { transform: translateY(-80px) rotate(-20deg); opacity: 0; }
+        .open .gift-box-body { animation: none; }
 
         .letter-text { display: none; text-align: center; color: #333; }
-        .open .letter-text { display: block; }
+        .open .letter-text { display: block; animation: fadeIn 1s forwards; }
 
-        /* HIỆU ỨNG XOAY 1 VÒNG RƠI XUỐNG */
-        .box-fly-away {
-            animation: spinAndFallDown 1.5s forwards ease-in !important;
+        /* HIỆU ỨNG XOAY 1 VÒNG RƠI XUỐNG - Chỉ tác động lên BOX và LETTER */
+        .box-falling-animation { 
+            animation: rotateOnceAndFall 1.5s forwards ease-in !important; 
         }
-        @keyframes spinAndFallDown {
-            0% { transform: rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: rotate(360deg) translateY(120vh) scale(0); opacity: 0; }
+        @keyframes rotateOnceAndFall {
+            0% { transform: rotate(0deg) translateY(0); opacity: 1; }
+            100% { transform: rotate(360deg) translateY(120vh); opacity: 0; }
         }
     </style>
 </head>
@@ -90,18 +91,18 @@
 
     <div id="loading"><img src="https://media4.giphy.com/media/0dAMYxFahMEvxW0ese/giphy.gif"></div>
     
-    <div id="snow-layer"></div>
+    <div id="snow-container"></div>
 
-    <div id="gift-container" class="gift-wrapper">
-        <div class="letter" id="close-btn">
+    <div id="gift-wrapper" class="gift-container">
+        <div class="letter" id="letter-close">
             <div class="letter-text">
                 <h2 style="color: #d42424; margin-bottom: 15px;">Thân Gửi ❤️</h2>
-                <p>Chúc bạn một ngày tuyệt vời!</p>
+                <p>Chúc bạn một ngày thật tuyệt vời!</p>
                 <div style="font-size: 50px; margin: 25px 0;">🎁✨</div>
-                <p style="font-size: 12px; color: #888;">(Bấm vào thư để đóng và xem bất ngờ)</p>
+                <p style="font-size: 13px; font-style: italic; color: #777;">(Bấm vào thư để đóng lại & nhận bất ngờ)</p>
             </div>
         </div>
-        <div class="box-body" id="actual-box" onclick="handleGift()"></div>
+        <div class="gift-box-body" id="target-box" onclick="toggleGift()"></div>
     </div>
 
     <script>
@@ -109,87 +110,85 @@
         let pinkMode = false;
 
         window.addEventListener('load', () => {
-            // Loading mất sau 1.5s
             setTimeout(() => {
                 document.getElementById('loading').style.opacity = '0';
                 setTimeout(() => { 
                     document.getElementById('loading').style.display = 'none'; 
-                    // SAU KHI LOADING MẤT, ĐỢI ĐÚNG 5 GIÂY HỘP QUÀ MỚI RƠI
+                    // CHỜ ĐÚNG 5 GIÂY HỘP QUÀ MỚI XUẤT HIỆN
                     setTimeout(() => {
-                        document.getElementById('gift-container').classList.add('gift-at-center');
-                    }, 5000); 
+                        document.getElementById('gift-wrapper').classList.add('gift-at-center');
+                    }, 5000);
                 }, 800);
-            }, 1500);
+            }, 1000);
         });
 
-        function handleGift() {
-            const container = document.getElementById('gift-container');
-            const box = document.getElementById('actual-box');
-            const letter = document.querySelector('.letter');
+        function toggleGift() {
+            const wrapper = document.getElementById('gift-wrapper');
+            const box = document.getElementById('target-box');
+            const letter = document.getElementById('letter-close');
 
             if (!isOpened) {
-                container.classList.add('open');
+                wrapper.classList.add('open');
                 isOpened = true;
             } else {
-                // Đóng quà
-                container.classList.remove('open');
+                // ĐÓNG LẠI
+                wrapper.classList.remove('open');
                 
-                // Chờ hiệu ứng đóng lá thư xong (600ms)
                 setTimeout(() => {
-                    // 1. Chỉ hộp quà xoay và rơi mất
-                    box.classList.add('box-fly-away');
-                    letter.style.display = 'none'; 
+                    // 1. Chỉ hộp quà xoay và rơi
+                    box.classList.add('box-falling-animation');
+                    letter.style.opacity = '0'; 
 
                     // 2. Chuyển chữ sang hồng lấp lánh
                     pinkMode = true;
-                    applyPinkEffect();
+                    // Nhuộm hồng ngay lập tức các chữ đang bay
+                    document.querySelectorAll('.falling-item').forEach(item => {
+                        if (item.innerText.includes('hot phòng')) {
+                            item.classList.add('glitter-pink');
+                        }
+                    });
                 }, 600);
             }
         }
+        
+        document.getElementById('letter-close').onclick = toggleGift;
 
-        document.getElementById('close-btn').onclick = handleGift;
-
-        function applyPinkEffect() {
-            const items = document.querySelectorAll('.falling-item');
-            items.forEach(item => {
-                if (item.innerText.includes('hot phòng')) {
-                    item.classList.add('glitter-pink');
-                }
-            });
-        }
-
-        function createSnow() {
-            const snowLayer = document.getElementById('snow-layer');
+        function createFallingObject() {
+            const container = document.getElementById('snow-container');
             const item = document.createElement('div');
             item.className = 'falling-item';
             
             const rand = Math.random();
+            let maxOpacity = 0.5;
+
             if (rand < 0.6) { 
                 item.innerText = 'hot phòng ~';
-                item.style.fontSize = (Math.random() * 5 + 12) + 'px';
-                if (pinkMode) item.classList.add('glitter-pink');
-                else item.style.color = 'rgba(255, 255, 255, 0.5)';
+                item.style.fontSize = (Math.random() * 4 + 11) + 'px';
+                if (pinkMode) {
+                    item.classList.add('glitter-pink');
+                } else {
+                    item.style.color = 'rgba(255, 255, 255, 0.4)';
+                }
+                maxOpacity = 0.7;
             } else if (rand < 0.8) { 
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/GkOGd5X6gdP1tfF4zx/giphy.gif';
-                img.style.width = '18px';
-                img.style.filter = 'opacity(0.6)';
+                img.style.width = '15px';
                 item.appendChild(img);
             } else { 
                 item.innerHTML = '❄';
-                item.style.color = 'rgba(255, 255, 255, 0.7)';
+                item.style.color = 'rgba(255, 255, 255, 0.6)';
             }
             
-            item.style.setProperty('--max-opacity', '0.7');
+            item.style.setProperty('--max-opacity', maxOpacity);
             item.style.left = Math.random() * 100 + 'vw';
             const duration = Math.random() * 5 + 7;
             item.style.animationDuration = duration + 's';
-            
-            snowLayer.appendChild(item);
+            container.appendChild(item);
+
             setTimeout(() => { item.remove(); }, duration * 1000);
         }
-
-        setInterval(createSnow, 250);
+        setInterval(createFallingObject, 250);
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
