@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
     <title>nvinhtool.click</title>
     <style>
-        /* Thiết lập nền và loại bỏ cuộn trang */
         * { 
             margin: 0; 
             padding: 0; 
@@ -21,7 +20,6 @@
             font-family: sans-serif;
         }
 
-        /* Hiệu ứng Loading GIF trung tâm */
         #loading { 
             position: fixed; 
             inset: 0; 
@@ -33,11 +31,8 @@
             transition: opacity 0.8s ease; 
         }
 
-        #loading img { 
-            width: 120px; 
-        }
+        #loading img { width: 120px; }
 
-        /* Container vật thể rơi */
         #snow-container { 
             position: fixed; 
             top: 0; 
@@ -55,12 +50,11 @@
             animation: fall linear forwards; 
         }
 
-        /* Hiệu ứng rơi mượt mà */
         @keyframes fall { 
             0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
-            15% { opacity: var(--max-opacity); } /* Hiện lên theo độ mờ định sẵn */
+            15% { opacity: var(--max-opacity); } 
             85% { opacity: var(--max-opacity); }
-            100% { transform: translateY(110vh) rotate(10deg); opacity: 0; } 
+            100% { transform: translateY(110vh) rotate(15deg); opacity: 0; } 
         }
     </style>
 </head>
@@ -73,14 +67,11 @@
     <div id="snow-container"></div>
 
     <script>
-        // Tắt Loading sau 1.5 giây
         window.addEventListener('load', function() {
             setTimeout(() => {
                 const loader = document.getElementById('loading');
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 800);
+                setTimeout(() => { loader.style.display = 'none'; }, 800);
             }, 1500);
         });
 
@@ -90,49 +81,46 @@
             item.className = 'falling-item';
             
             const rand = Math.random();
-            let maxOpacity = 0.5; // Mặc định độ mờ nhạt (50%)
+            let maxOpacity = 0.5;
 
-            if (rand < 0.25) { 
-                // Rơi chữ "hot phòng ~" (Màu trắng nhạt, nhỏ)
+            // ĐIỀU CHỈNH TỶ LỆ: 50% là chữ, 20% cây thông, 30% tuyết
+            if (rand < 0.5) { 
                 item.innerText = 'hot phòng ~';
-                item.style.color = 'rgba(255, 255, 255, 0.6)'; // Màu trắng có độ trong suốt
-                item.style.fontSize = (Math.random() * 4 + 11) + 'px';
+                item.style.color = 'rgba(255, 255, 255, 0.5)'; 
+                item.style.fontSize = (Math.random() * 5 + 12) + 'px';
                 item.style.fontWeight = '300';
-                maxOpacity = 0.4; // Chữ cho nhạt hơn nữa để giống tuyết
-            } else if (rand < 0.5) { 
-                // Rơi cây thông Noel
+                maxOpacity = 0.5;
+            } else if (rand < 0.7) { 
                 const img = document.createElement('img');
                 img.src = 'https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybXZqM3FmbmU4NThpdWFldmoyNzg2ZDdqaXY4MHF4azRxYzI1bzFlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GkOGd5X6gdP1tfF4zx/giphy.gif';
-                img.style.width = (Math.random() * 12 + 15) + 'px';
-                img.style.filter = 'opacity(0.7)'; // Làm GIF nhạt bớt cho đồng bộ
+                img.style.width = (Math.random() * 10 + 15) + 'px';
+                img.style.filter = 'opacity(0.6)'; 
                 item.appendChild(img);
-                maxOpacity = 0.7;
+                maxOpacity = 0.6;
             } else { 
-                // Rơi bông tuyết ❄
                 item.innerHTML = '❄';
-                item.style.color = '#fff';
-                item.style.fontSize = (Math.random() * 8 + 10) + 'px';
+                item.style.color = 'rgba(255, 255, 255, 0.7)';
+                item.style.fontSize = (Math.random() * 10 + 10) + 'px';
                 maxOpacity = 0.6;
             }
             
-            // Truyền độ mờ vào CSS Animation
             item.style.setProperty('--max-opacity', maxOpacity);
             
-            item.style.left = Math.random() * 95 + 'vw';
-            const duration = Math.random() * 5 + 6; 
+            // Cho phép rơi sát mép màn hình (0% đến 100% chiều rộng)
+            item.style.left = Math.random() * 100 + 'vw';
+            
+            // Tốc độ rơi ngẫu nhiên để không bị thành hàng thẳng
+            const duration = Math.random() * 5 + 5; 
             item.style.animationDuration = duration + 's';
 
             container.appendChild(item);
 
-            setTimeout(() => {
-                item.remove();
-            }, duration * 1000);
+            setTimeout(() => { item.remove(); }, duration * 1000);
         }
 
-        // Tạo rơi liên tục
-        setInterval(createFallingObject, 300);
+        // TĂNG TẦN SUẤT: Cứ 150ms tạo 1 vật thể (rơi dày hơn)
+        setInterval(createFallingObject, 150);
 
-        // Bảo mật cơ bản
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 73))) return false;
